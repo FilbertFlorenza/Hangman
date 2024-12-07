@@ -20,31 +20,49 @@ window.title("Hangman Game")
 
 difficulty = StringVar()
 
+# Start Button Image
+startButton = Image.open("C:\\Users\\SHE LINNA\\Pictures\\Saved Pictures\\hangman\\start button.jpg")
+startButton = startButton.resize((40,40))
+startPhoto = ImageTk.PhotoImage(startButton)
+
+# Exit Button Image
+exitButton = Image.open("C:\\Users\\SHE LINNA\\Pictures\\Saved Pictures\\hangman\\exit button.jpg")
+exitButton = exitButton.resize((40,40))
+exitPhoto = ImageTk.PhotoImage(exitButton)
 def first_page():
 
+    
     def start():
-        firstpageFrame.destroy()
+        menuFrame.destroy()
         second_page()
     def exit():
         window.destroy()
 
-    # Menu Frame
-    firstpageFrame = tk.Frame(window)
-    firstpageFrame.grid(row=0,column=0)
+    
+    menuFrame = tk.Frame(window)
+    menuFrame.grid(row=0,column=0)
 
     # Title Label
-    title = tk.Label(firstpageFrame, text="Hangman Games")
+    title = tk.Label(menuFrame, text="Hangman Games")
     title.grid(row=0,column=0,sticky='w')
 
-    # Buttons Frame
-    buttonFrame = tk.Frame(firstpageFrame)
-    buttonFrame.grid(row=1,column=0)
-
     # Buttons
-    startButton = tk.Button(buttonFrame, command=start,text="START")
-    exitButton = tk.Button(buttonFrame, command=exit,text="EXIT")
-    startButton.grid(row=1,column=0)
-    exitButton.grid(row=1,column=1)
+    
+    
+    Button_Start = tk.Button(
+        window,
+        image= startPhoto,
+        command=start
+    )
+    Button_Start.place(x= 140, y=450)
+    # startButton = tk.Button(menuFrame, command=start)
+
+    Button_Exit = tk.Button(
+        window,
+        image= exitPhoto,
+        command=exit
+    )
+    Button_Exit.place(x= 220, y=450)
    
 
 def second_page():
