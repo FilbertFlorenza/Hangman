@@ -5,10 +5,7 @@ import string
 import sys
 import tkinter as tk
 from PIL import ImageTk, Image
-from tkinter import ttk
-from tkinter import messagebox
-from tkinter import PhotoImage
-from tkinter import StringVar
+from tkinter import PhotoImage, StringVar, IntVar
 
 
 #Initialize window
@@ -20,8 +17,33 @@ window.title("Hangman Game")
 
 difficulty = StringVar()
 
-def first_page():
+# !!! IMPORTANT !!!!!
+# words.txt directory, change to the directory of words.txt on your device. Example: C:/Documents/hangman/words.txt
+# change this or else the program won't work
+WORDLIST_FILENAME = "words.txt"
 
+def loadWords():
+    """
+    Returns a list of valid words. Words are strings of lowercase letters.
+    
+    Depending on the size of the word list, this function may
+    take a while to finish.
+    """
+    print("Loading word list from file...")
+    # inFile: file
+    inFile = open(WORDLIST_FILENAME, 'r')
+    # line: string
+    line = inFile.readline()
+    # wordlist: list of strings
+    wordlist = line.split()
+    print("  ", len(wordlist), "words loaded.")
+    return wordlist
+
+# Load the list of words into the variable wordlist
+# so that it can be accessed from anywhere in the program
+wordlist = loadWords()
+
+def first_page():
     def start():
         menuFrame.destroy()
         second_page()
@@ -46,7 +68,6 @@ def first_page():
     startButton.grid(row=1,column=0)
     exitButton.grid(row=1,column=1)
    
-
 def second_page():
     def select_difficulty(difficultyString):
         difficulty.set(difficultyString)
@@ -73,92 +94,104 @@ def second_page():
     hardButton.grid(row=1,column=2)
     
 def game_page():
-    difficultySetting = difficulty.get()
-    # !!! IMPORTANT !!!!!
-    # words.txt directory, change to the directory of words.txt on your device. Example: C:/Documents/hangman/words.txt
-    # change this or else the program won't work
-    WORDLIST_FILENAME = "words.txt"
-
-    def loadWords():
-        """
-        Returns a list of valid words. Words are strings of lowercase letters.
-        
-        Depending on the size of the word list, this function may
-        take a while to finish.
-        """
-        print("Loading word list from file...")
-        # inFile: file
-        inFile = open(WORDLIST_FILENAME, 'r')
-        # line: string
-        line = inFile.readline()
-        # wordlist: list of strings
-        wordlist = line.split()
-        print("  ", len(wordlist), "words loaded.")
-        return wordlist
-
     def chooseWord(wordlist):
-        """
-        Choose a random word from the word list
-
-        Parameters:
-            wordlist (list): list of words
-
-        Returns: 
-            a word from wordlist at random (string)
-        """
         return random.choice(wordlist)
 
-    # Load the list of words into the variable wordlist
-    # so that it can be accessed from anywhere in the program
-    wordlist = loadWords()
-
     def isWordGuessed(secretWord, lettersGuessed):
-        '''
-        Check if word is guessed from the letters guessed
-
-        Parameters:
-            secretWord (string): the word the user is guessing
-            lettersGuessed (list): what letters have been guessed so far
-        returns: 
-            boolean, True if all the letters of secretWord are in lettersGuessed (boolean)
-        False otherwise
-        '''
         return set(secretWord).issubset(lettersGuessed) 
             
-
-    def getGuessedWord(secretWord, lettersGuessed):
-        '''
-        Parameters:
-            secretWord (string): the word the user is guessing
-            lettersGuessed (list): what letters have been guessed so far
-        returns: 
-            string, comprised of letters and underscores that represents what letters in secretWord have been guessed so far. (string)
-        '''
+    def guessWord(secretWord, letter):
+       
         guessedWord = ''
+        lettersGuessed = lettersGuessedVar.get()
+        lettersGuessed = lettersGuessed + letter
+        lettersGuessedVar.set(lettersGuessed)
+        timesGuessed = timesGuessedVar.get()
+        timesGuessed += 1
         for letter in secretWord:
             if letter in lettersGuessed:
                 guessedWord += letter
             else:
                 guessedWord += '_ '
-        return guessedWord
 
+        guessedWordVar.set(guessedWord)
+        timesGuessedVar.set(timesGuessed)
+        
+        if isWordGuessed(secretWord,lettersGuessed):
+            gameFrame.destroy()
+            end_page('congratulations')
+        elif(timesGuessed == maxGuessVar.get()):
+            gameFrame.destroy()
+            end_page('game over')
 
-    def getAvailableLetters(lettersGuessed):
-        '''
-        Parameters:
-            lettersGuessed (list): what letters have been guessed so far
-        returns: 
-            string, comprised of letters that represents what letters have not yet been guessed. (string)
-        '''
-        allLetters = string.ascii_lowercase
-        availableLetters = ''
-        for letter in allLetters:
-            if letter not in lettersGuessed:
-                availableLetters += letter
-        return availableLetters
+    # Set Variables
+    difficultySetting = difficulty.get()
+    isTimer = False
+    secretWord = chooseWord(wordlist)
+    guessedWordVar = StringVar()
+    lettersGuessedVar = StringVar()
+    maxGuessVar = IntVar()
+    timesGuessedVar = IntVar()
+
+    if difficultySetting == 'easy':
+        maxGuessVar.set(8)
+    elif difficultySetting == 'medium':
+        maxGuessVar.set(6)
+        isTimer = True
+    else:
+        maxGuessVar.set(4)
+        isTimer = True
+   
+    # Game Frame
+    gameFrame = tk.Frame(window)
+    gameFrame.grid(row=0,column=0)
+
+    # Word Label
+    guessWord(secretWord, '')
+    wordLabel = tk.Label(gameFrame, textvariable=guessedWordVar).grid(row=0,column=0)
+
+    # Alphabet Buttons
+    alphabets = [
+        ['A','B','C','D','E','F'],
+        ['G','H','I','J','K','L'],
+        ['M','N','O','P','K','R'],
+        ['S','T','U','V','W','X'],
+        ['Y','Z']
+    ]
+
+    alphabetFrame = tk.Frame(gameFrame)
+    alphabetFrame.grid(row=1,column=0)
     
-    print()
-    pass
+    for indexRow,row in enumerate(alphabets):
+        for indexColumn,letter in enumerate(row):
+            letterButton = tk.Button(alphabetFrame, text=letter, command=lambda l=letter.lower():  guessWord(secretWord, l))
+            letterButton.grid(row=indexRow+1, column=indexColumn,pady=5) 
+
+def end_page(message):
+
+    def restart():
+        menuFrame.destroy()
+        second_page()
+    def exit():
+        window.destroy()
+    # Menu Frame
+    menuFrame = tk.Frame(window)
+    menuFrame.grid(row=0,column=0)
+
+    # Title Label
+    title = tk.Label(menuFrame, text=message)
+    title.grid(row=0,column=0,sticky='w')
+
+    # Buttons Frame
+    buttonFrame = tk.Frame(menuFrame)
+    buttonFrame.grid(row=1,column=0)
+
+    # Buttons
+    startButton = tk.Button(buttonFrame, command=restart,text="RESTART")
+    exitButton = tk.Button(buttonFrame, command=exit,text="EXIT")
+    startButton.grid(row=1,column=0)
+    exitButton.grid(row=1,column=1)
+
 first_page()
 # customer_input()
 # Run the application
