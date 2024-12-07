@@ -3,11 +3,11 @@ import tkinter as tk
 import random
 from tkinter import StringVar, IntVar
 from helper.words import loadWords
-from images import load_image
-from start_page import start_page
-from difficulty_page import difficulty_page
-from game_page import game_page
-from end_page import end_page
+from images.images import load_image
+from pages.start_page import start_page
+from pages.difficulty_page import difficulty_page
+from pages.game_page import game_page
+from pages.end_page import end_page
 
 def main():
     #Initialize window
@@ -52,6 +52,7 @@ def main():
     pages['game_over_page'] = end_page(windowFrame, show_page, exit, images, 'Game Over')
 
     show_page('start_page')
+
     # Run window tkinter
     window.mainloop()
 

@@ -8,7 +8,7 @@ def load_image():
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
 
     # Start Button Image
-    image_path = "images\\start button.jpg"
+    image_path = "start button.jpg"
     abs_image_path = os.path.join(script_dir, image_path)
     startImage = Image.open(abs_image_path)
     startImage = startImage.resize((40,40))
@@ -16,7 +16,7 @@ def load_image():
     images['startPhoto'] = startPhoto
 
     # Exit Button Image
-    image_path = "images\\exit button.jpg"
+    image_path = "exit button.jpg"
     abs_image_path = os.path.join(script_dir, image_path)
     exitImage = Image.open(abs_image_path)
     exitImage = exitImage.resize((40,40))
