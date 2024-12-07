@@ -2,7 +2,7 @@ import random
 import string
 import sys
 
-# asidga
+# asidgaawdad
 
 # !!! IMPORTANT !!!!!
 # words.txt directory, change to the directory of words.txt on your device. Example: C:/Documents/hangman/words.txt
