@@ -1,5 +1,7 @@
 import tkinter as tk
 import random
+import time
+import threading
 from tkinter import StringVar, IntVar
 
 def game_page(window,show_page, difficulty, wordlist, images):
@@ -22,7 +24,6 @@ def game_page(window,show_page, difficulty, wordlist, images):
         return set(secretWord).issubset(lettersGuessed) 
                 
     def guessWord(secretWord, letter):
-    
         guessedWord = ''
         lettersGuessed = lettersGuessedVar.get()
         lettersGuessed = lettersGuessed + letter
@@ -43,27 +44,41 @@ def game_page(window,show_page, difficulty, wordlist, images):
         elif(timesGuessed == maxGuessVar.get()):
             show_page('game_over_page')
 
+    def set_timer(duration_in_seconds):
+        def count_down():
+            for i in range(duration_in_seconds, 0, -1):
+                mins, secs = divmod(i, 60)
+                timer = '{:02d}:{:02d}'. format(mins,secs)
+                timerVar.set(timer)
+                time.sleep(1)
+            window.after(0, show_page('game_over_page'))
+
+        # Run countdown on separate thread else it will block the main gui
+        threading.Thread(target=count_down, daemon=True).start()
+
     # Set Variables
     difficultySetting = difficulty
-    isTimer = False
     secretWord = chooseWord(wordlist)
     guessedWordVar = StringVar()
     lettersGuessedVar = StringVar()
     maxGuessVar = IntVar()
     timesGuessedVar = IntVar()
-
+    timerVar = StringVar()
     if difficultySetting == 'easy':
         maxGuessVar.set(8)
     elif difficultySetting == 'medium':
         maxGuessVar.set(6)
-        isTimer = True
+        set_timer(120)
     else:
         maxGuessVar.set(4)
-        isTimer = True
+        set_timer(60)
+
+    # Timer Label
+    timerLabel = tk.Label(gameFrame, textvariable=timerVar).grid(row=0,column=0)
 
     # Word Label
-    guessWord(secretWord, '')
-    wordLabel = tk.Label(gameFrame, textvariable=guessedWordVar).grid(row=0,column=0)
+    guessedWordVar.set('_ '*len(secretWord)) #Set initial hidden word
+    wordLabel = tk.Label(gameFrame, textvariable=guessedWordVar).grid(row=1,column=0)
 
     # Alphabet Buttons
     alphabets = [
@@ -75,7 +90,7 @@ def game_page(window,show_page, difficulty, wordlist, images):
     ]
 
     alphabetFrame = tk.Frame(gameFrame)
-    alphabetFrame.grid(row=1,column=0)
+    alphabetFrame.grid(row=2,column=0)
         
     for indexRow,row in enumerate(alphabets):
         for indexColumn,letter in enumerate(row):
