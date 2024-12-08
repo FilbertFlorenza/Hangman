@@ -33,14 +33,15 @@ def main():
         page.tkraise()
 
     def show_game_page(difficulty):
-        page_game_page = game_page(
+        pages['game_page'] = game_page(
             windowFrame,
             show_page,
             difficulty,
+            exit,
             wordlist,
             images
             )
-        page_game_page.tkraise()
+        pages['game_page'].tkraise()
 
     def exit():
         window.destroy()
