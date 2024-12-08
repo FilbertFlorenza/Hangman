@@ -78,11 +78,11 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
     elif difficultySetting == 'medium':
         maxGuessVar.set(6)
         pause_countdown.set()
-        set_timer(8, stop_countdown, pause_countdown)
+        set_timer(60, stop_countdown, pause_countdown)
     else:
         maxGuessVar.set(4)
         pause_countdown.set()
-        set_timer(60, stop_countdown, pause_countdown)
+        set_timer(30, stop_countdown, pause_countdown)
 
     # Pause Frame
     pauseFrame = pause_page(window, show_page, exit, pause_countdown, stop_countdown, images)
