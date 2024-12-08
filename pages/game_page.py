@@ -3,19 +3,14 @@ import random
 import time
 import threading
 from tkinter import StringVar, IntVar
+from pages.pause_page import pause_page
 
-def game_page(window,show_page, difficulty, wordlist, images):
+def game_page(window, show_page, difficulty, exit, wordlist, images):
     # Game Frame
     gameFrame = tk.Frame(window)
     gameFrame.grid(row=0,column=0, sticky='nsew', padx=10, pady=10)
     gameFrame.rowconfigure(0, weight=1)
     gameFrame.columnconfigure(0, weight=1)
-
-    buttonFrame = tk.Frame(gameFrame)
-    buttonFrame.grid(row=0,column=0)
-
-    # pauseButton = tk.Button(buttonFrame, command=pause, text="PAUSE")
-    # pauseButton.grid(row=1, column=0)
 
     def chooseWord(wordlist):
         return random.choice(wordlist)
@@ -23,7 +18,7 @@ def game_page(window,show_page, difficulty, wordlist, images):
     def isWordGuessed(secretWord, lettersGuessed):
         return set(secretWord).issubset(lettersGuessed) 
                 
-    def guessWord(secretWord, letter):
+    def guessWord(secretWord, letter, stop_countdown):
         guessedWord = ''
         lettersGuessed = lettersGuessedVar.get()
         lettersGuessed = lettersGuessed + letter
@@ -40,13 +35,18 @@ def game_page(window,show_page, difficulty, wordlist, images):
         timesGuessedVar.set(timesGuessed)
         
         if isWordGuessed(secretWord,lettersGuessed):
-            show_page('difficulty_page')
+            stop_countdown.set()
+            show_page('congratulation_page')
         elif(timesGuessed == maxGuessVar.get()):
+            stop_countdown.set()
             show_page('game_over_page')
 
-    def set_timer(duration_in_seconds):
+    def set_timer(duration_in_seconds, stop_countdown, pause_countdown):
         def count_down():
             for i in range(duration_in_seconds, 0, -1):
+                if stop_countdown.is_set():
+                    return
+                pause_countdown.wait()
                 mins, secs = divmod(i, 60)
                 timer = '{:02d}:{:02d}'. format(mins,secs)
                 timerVar.set(timer)
@@ -54,7 +54,12 @@ def game_page(window,show_page, difficulty, wordlist, images):
             window.after(0, show_page('game_over_page'))
 
         # Run countdown on separate thread else it will block the main gui
-        threading.Thread(target=count_down, daemon=True).start()
+        countdownThread = threading.Thread(target=count_down, daemon=True)
+        countdownThread.start()
+
+    def open_menu(menuFrame, pause_countdown):
+        pause_countdown.clear()
+        menuFrame.tkraise()
 
     # Set Variables
     difficultySetting = difficulty
@@ -64,14 +69,27 @@ def game_page(window,show_page, difficulty, wordlist, images):
     maxGuessVar = IntVar()
     timesGuessedVar = IntVar()
     timerVar = StringVar()
+
+    stop_countdown = threading.Event()
+    pause_countdown = threading.Event()
+    # Check difficulty setting
     if difficultySetting == 'easy':
         maxGuessVar.set(8)
     elif difficultySetting == 'medium':
         maxGuessVar.set(6)
-        set_timer(120)
+        pause_countdown.set()
+        set_timer(8, stop_countdown, pause_countdown)
     else:
         maxGuessVar.set(4)
-        set_timer(60)
+        pause_countdown.set()
+        set_timer(60, stop_countdown, pause_countdown)
+
+    # Pause Frame
+    pauseFrame = pause_page(window, show_page, exit, pause_countdown, stop_countdown, images)
+
+    # Menu Button
+    menuButton = tk.Button(gameFrame, text='Pause', command=lambda: open_menu(pauseFrame, pause_countdown))
+    menuButton.grid(row=0,column=0,sticky='nw')
 
     # Timer Label
     timerLabel = tk.Label(gameFrame, textvariable=timerVar).grid(row=0,column=0)
@@ -80,7 +98,7 @@ def game_page(window,show_page, difficulty, wordlist, images):
     guessedWordVar.set('_ '*len(secretWord)) #Set initial hidden word
     wordLabel = tk.Label(gameFrame, textvariable=guessedWordVar).grid(row=1,column=0)
 
-    # Alphabet Buttons
+    # Alphabet Buttons Array
     alphabets = [
         ['A','B','C','D','E','F'],
         ['G','H','I','J','K','L'],
@@ -89,12 +107,14 @@ def game_page(window,show_page, difficulty, wordlist, images):
         ['Y','Z']
     ]
 
+    # Alphabet Buttons Frame
     alphabetFrame = tk.Frame(gameFrame)
     alphabetFrame.grid(row=2,column=0)
         
+    # Create button through loop
     for indexRow,row in enumerate(alphabets):
         for indexColumn,letter in enumerate(row):
-            letterButton = tk.Button(alphabetFrame, text=letter, command=lambda l=letter.lower():  guessWord(secretWord, l))
+            letterButton = tk.Button(alphabetFrame, text=letter, command=lambda l=letter.lower():  guessWord(secretWord, l, stop_countdown))
             letterButton.grid(row=indexRow+1, column=indexColumn,pady=5) 
         
     return gameFrame
