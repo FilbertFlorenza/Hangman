@@ -88,7 +88,7 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
     pauseFrame = pause_page(window, show_page, exit, pause_countdown, stop_countdown, images)
     
     menuButton = tk.Button(   
-    menuButton,
+    gameFrame,
     image=images['pausePhoto'],
     command=lambda: open_menu(pauseFrame, pause_countdown),
     highlightthickness=0,
