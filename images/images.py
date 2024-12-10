@@ -11,7 +11,7 @@ def load_image():
     image_path = "start button.jpg"
     abs_image_path = os.path.join(script_dir, image_path)
     startImage = Image.open(abs_image_path)
-    startImage = startImage.resize((40,40))
+    startImage = startImage.resize((60,60))
     startPhoto = ImageTk.PhotoImage(startImage)
     images['startPhoto'] = startPhoto
 
@@ -19,7 +19,7 @@ def load_image():
     image_path = "exit button.jpg"
     abs_image_path = os.path.join(script_dir, image_path)
     exitImage = Image.open(abs_image_path)
-    exitImage = exitImage.resize((40,40))
+    exitImage = exitImage.resize((60,60))
     exitPhoto = ImageTk.PhotoImage(exitImage)
     images['exitPhoto'] = exitPhoto
 
