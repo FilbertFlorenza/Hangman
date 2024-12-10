@@ -7,6 +7,14 @@ def load_image():
     # Image Path
     script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
 
+    # Title Screen Image
+    image_path = "hangman.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    titleImage = Image.open(abs_image_path)
+    titleImage = titleImage.resize((400,600))
+    titlePhoto = ImageTk.PhotoImage(titleImage)
+    images['titlePhoto'] = titlePhoto
+
     # Start Button Image
     image_path = "start button.jpg"
     abs_image_path = os.path.join(script_dir, image_path)
