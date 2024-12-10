@@ -59,5 +59,32 @@ def load_image():
     hardPhoto = ImageTk.PhotoImage(hardImage)
     images['hardPhoto'] = hardPhoto
 
+    image_path = "resume.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    resumeImage = Image.open(abs_image_path)
+    resumeImage = resumeImage.resize((60,60))
+    resumePhoto = ImageTk.PhotoImage(resumeImage)
+    images['resumePhoto'] = resumePhoto
+
+    image_path = "main menu.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    mainmenuImage = Image.open(abs_image_path)
+    mainmenuImage = mainmenuImage.resize((60,60))
+    mainmenuPhoto = ImageTk.PhotoImage(mainmenuImage)
+    images['mainmenuPhoto'] = mainmenuPhoto
+
+    image_path = "exit button.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    exitImage = Image.open(abs_image_path)
+    exitImage = exitImage.resize((60,60))
+    exitPhoto = ImageTk.PhotoImage(exitImage)
+    images['exitPhoto'] = exitPhoto
+
+    image_path = "pause.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    pauseImage = Image.open(abs_image_path)
+    pauseImage = pauseImage.resize((60,60))
+    pausePhoto = ImageTk.PhotoImage(pauseImage)
+    images['pausePhoto'] = pausePhoto
 
     return images

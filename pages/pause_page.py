@@ -19,11 +19,33 @@ def pause_page(window, show_page, exit, pause_countdown, stop_countdown, images)
     buttonFrame = tk.Frame(pauseFrame)
     buttonFrame.grid(row=1,column=0)
 
-    resumeButton = tk.Button(buttonFrame, command=resume,text="RESUME")
-    mainmenuButton = tk.Button(buttonFrame, command=main_menu,text="MAIN MENU")
-    exitButton = tk.Button(buttonFrame, command=exit, text="EXIT")
+    resumeButton = tk.Button(
+    buttonFrame,
+    image=images['resumePhoto'],
+    command=resume,
+    highlightthickness=0,
+    borderwidth=0
+    )
     resumeButton.grid(row=1,column=0)
-    mainmenuButton.grid(row=1,column=1)
-    exitButton.grid(row=1,column=2)
 
+    mainmenuButton = tk.Button(
+    buttonFrame,
+    image=images['mainmenuPhoto'],
+    command=main_menu,
+    highlightthickness=0,
+    borderwidth=0
+    )
+    mainmenuButton.grid(row=1,column=1)
+
+    exitButton = tk.Button(
+    buttonFrame,
+    image=images['exitPhoto'],
+    command=exit,
+    highlightthickness=0,
+    borderwidth=0
+    )
+    exitButton.grid(row=1,column=2)
+    
+
+    
     return pauseFrame

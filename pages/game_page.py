@@ -86,9 +86,14 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
 
     # Pause Frame
     pauseFrame = pause_page(window, show_page, exit, pause_countdown, stop_countdown, images)
-
-    # Menu Button
-    menuButton = tk.Button(gameFrame, text='Pause', command=lambda: open_menu(pauseFrame, pause_countdown))
+    
+    menuButton = tk.Button(   
+    menuButton,
+    image=images['pausePhoto'],
+    command=lambda: open_menu(pauseFrame, pause_countdown),
+    highlightthickness=0,
+    borderwidth=0
+    )
     menuButton.grid(row=0,column=0,sticky='nw')
 
     # Timer Label
