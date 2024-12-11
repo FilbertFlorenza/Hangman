@@ -7,16 +7,20 @@ def end_page(window, show_page, exit, images, message):
     endFrame.columnconfigure(0, weight=1)
 
     # Title Label
-    title = tk.Label(endFrame, image=images['overPhoto'])
+    title = tk.Label(endFrame, image=images[message])
     title.grid(row=0,column=0)
 
     # Buttons Frame
     buttonFrame = tk.Frame(endFrame)
     buttonFrame.grid(row=1,column=0)
     # Buttons
-    startButton = tk.Button(buttonFrame, command=lambda: show_page('start_page'),text="RESTART")
-    exitButton = tk.Button(buttonFrame, command=lambda: exit(),text="EXIT")
+    startButton = tk.Button(buttonFrame,
+        image=images['restartPhoto'], 
+        command=lambda: show_page('start_page'))
     startButton.grid(row=1,column=0)
+    exitButton = tk.Button(buttonFrame, 
+        image=images['exitPhoto'], 
+        command=lambda: exit())
     exitButton.grid(row=1,column=1)
 
     return endFrame

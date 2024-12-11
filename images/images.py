@@ -92,13 +92,69 @@ def load_image():
     congratsImage = Image.open(abs_image_path)
     congratsImage = congratsImage.resize((400,600))
     congratsPhoto = ImageTk.PhotoImage(congratsImage)
-    images['congratsPhoto'] = congratsPhoto
+    images['Congratulations'] = congratsPhoto
 
     image_path = "game over.jpg"
     abs_image_path = os.path.join(script_dir, image_path)
     overImage = Image.open(abs_image_path)
     overImage = overImage.resize((400,600))
     overPhoto = ImageTk.PhotoImage(overImage)
-    images['overPhoto'] = overPhoto 
-      
+    images['Game Over'] = overPhoto 
+    
+    image_path = "restart.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    restartImage = Image.open(abs_image_path)
+    restartImage = restartImage.resize((60,60))
+    restartPhoto = ImageTk.PhotoImage(restartImage)
+    images['restartPhoto'] = restartPhoto
+
+    image_path = "h1.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    h1Image = Image.open(abs_image_path)
+    h1Image = h1Image.resize((400,600))
+    h1Photo = ImageTk.PhotoImage(h1Image)
+    images['h1'] = h1Photo 
+
+    image_path = "h2.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    h2Image = Image.open(abs_image_path)
+    h2Image = h2Image.resize((400,600))
+    h2Photo = ImageTk.PhotoImage(h2Image)
+    images['h2'] = h1Photo 
+
+    image_path = "h3.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    h3Image = Image.open(abs_image_path)
+    h3Image = h1Image.resize((400,600))
+    h3Photo = ImageTk.PhotoImage(h3Image)
+    images['h3'] = h3Photo 
+
+    image_path = "h4.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    h4Image = Image.open(abs_image_path)
+    h4Image = h1Image.resize((400,600))
+    h4Photo = ImageTk.PhotoImage(h4Image)
+    images['h4'] = h4Photo 
+
+    image_path = "h5.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    h5Image = Image.open(abs_image_path)
+    h5Image = h5Image.resize((400,600))
+    h5Photo = ImageTk.PhotoImage(h5Image)
+    images['h5'] = h5Photo 
+
+    image_path = "h6.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    h6Image = Image.open(abs_image_path)
+    h6Image = h6Image.resize((400,600))
+    h6Photo = ImageTk.PhotoImage(h6Image)
+    images['h6'] = h6Photo 
+
+    image_path = "h7.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    h7Image = Image.open(abs_image_path)
+    h7Image = h1Image.resize((400,600))
+    h7Photo = ImageTk.PhotoImage(h7Image)
+    images['h7'] = h7Photo 
+    
     return images
