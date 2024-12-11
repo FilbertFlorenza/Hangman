@@ -87,4 +87,18 @@ def load_image():
     pausePhoto = ImageTk.PhotoImage(pauseImage)
     images['pausePhoto'] = pausePhoto
 
+    image_path = "congrats.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    congratsImage = Image.open(abs_image_path)
+    congratsImage = congratsImage.resize((400,600))
+    congratsPhoto = ImageTk.PhotoImage(congratsImage)
+    images['congratsPhoto'] = congratsPhoto
+
+    image_path = "game over.jpg"
+    abs_image_path = os.path.join(script_dir, image_path)
+    overImage = Image.open(abs_image_path)
+    overImage = overImage.resize((400,600))
+    overPhoto = ImageTk.PhotoImage(overImage)
+    images['overPhoto'] = overPhoto 
+      
     return images
