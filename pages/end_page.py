@@ -7,7 +7,7 @@ def end_page(window, show_page, exit, images, message):
     endFrame.columnconfigure(0, weight=1)
 
     # Title Label
-    title = tk.Label(endFrame, text=message)
+    title = tk.Label(endFrame, image=images['overPhoto'])
     title.grid(row=0,column=0)
 
     # Buttons Frame
