@@ -2,6 +2,7 @@ import tkinter as tk
 import random
 import time
 import threading
+import math
 from tkinter import StringVar, IntVar
 from pages.pause_page import pause_page
 
@@ -20,11 +21,11 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
                 
     def guessWord(secretWord, letter, stop_countdown):
         guessedWord = ''
+        currentGuessedWord = guessedWordVar.get()
         lettersGuessed = lettersGuessedVar.get()
         lettersGuessed = lettersGuessed + letter
         lettersGuessedVar.set(lettersGuessed)
-        timesGuessed = timesGuessedVar.get()
-        timesGuessed += 1
+        timesWrong = timesWrongVar.get()
         for letter in secretWord:
             if letter in lettersGuessed:
                 guessedWord += letter
@@ -32,12 +33,24 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
                 guessedWord += '_ '
 
         guessedWordVar.set(guessedWord)
-        timesGuessedVar.set(timesGuessed)
         
+        # Check if guessWord has changes, if not then guess is incorrent => add to times guessed
+        if(guessedWord == currentGuessedWord):
+            timesWrong += 1
+            timesWrongVar.set(timesWrong)
+        
+        # Update image
+        hangmanRatio = 6 / maxGuessVar.get()
+        hangmanNumber = (timesWrong+1) * hangmanRatio
+        if hangmanNumber > 6:
+            hangmanNumber = 6
+        hangmanNumber = str(math.ceil(hangmanNumber)) 
+        hangmanLabel.configure(image=images['h'+ hangmanNumber])
+
         if isWordGuessed(secretWord,lettersGuessed):
             stop_countdown.set()
             show_page('congratulation_page')
-        elif(timesGuessed == maxGuessVar.get()):
+        elif(timesWrong == maxGuessVar.get()):
             stop_countdown.set()
             show_page('game_over_page')
 
@@ -63,18 +76,18 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
 
     # Set Variables
     difficultySetting = difficulty
-    secretWord = 'test'
+    secretWord = chooseWord(wordlist)
     guessedWordVar = StringVar()
     lettersGuessedVar = StringVar()
     maxGuessVar = IntVar()
-    timesGuessedVar = IntVar()
+    timesWrongVar = IntVar()
     timerVar = StringVar()
 
     stop_countdown = threading.Event()
     pause_countdown = threading.Event()
     # Check difficulty setting
     if difficultySetting == 'easy':
-        maxGuessVar.set(8)
+        maxGuessVar.set(6)
     elif difficultySetting == 'medium':
         maxGuessVar.set(6)
         pause_countdown.set()
@@ -97,11 +110,15 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
     menuButton.grid(row=0,column=0,sticky='nw')
 
     # Timer Label
-    timerLabel = tk.Label(gameFrame, textvariable=timerVar).grid(row=0,column=0)
+    timerLabel = tk.Label(gameFrame, textvariable=timerVar).grid(row=0,column=0, sticky='n')
+
+    # Hangman Label
+    hangmanLabel = tk.Label(gameFrame, image=images['h1'])
+    hangmanLabel.grid(row=1,column=0, sticky='n')
 
     # Word Label
     guessedWordVar.set('_ '*len(secretWord)) #Set initial hidden word
-    wordLabel = tk.Label(gameFrame, textvariable=guessedWordVar).grid(row=1,column=0)
+    wordLabel = tk.Label(gameFrame, textvariable=guessedWordVar).grid(row=2,column=0)
 
     # Alphabet Buttons Array
     alphabets = [
@@ -114,7 +131,7 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
 
     # Alphabet Buttons Frame
     alphabetFrame = tk.Frame(gameFrame)
-    alphabetFrame.grid(row=2,column=0)
+    alphabetFrame.grid(row=3,column=0)
         
     # Create button through loop
     for indexRow,row in enumerate(alphabets):
