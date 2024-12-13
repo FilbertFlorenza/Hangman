@@ -26,6 +26,11 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
         lettersGuessed = lettersGuessed + letter
         lettersGuessedVar.set(lettersGuessed)
         timesWrong = timesWrongVar.get()
+
+        # Disable letter button
+        letterButtons[letter].config(state=tk.DISABLED)
+
+        # Get guessed letter and put it in the word
         for letter in secretWord:
             if letter in lettersGuessed:
                 guessedWord += letter
@@ -118,7 +123,7 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
 
     # Word Label
     guessedWordVar.set('_ '*len(secretWord)) #Set initial hidden word
-    wordLabel = tk.Label(gameFrame, textvariable=guessedWordVar).grid(row=2,column=0)
+    wordLabel = tk.Label(gameFrame, textvariable=guessedWordVar, font=('Courier', 14, "bold")).grid(row=2,column=0)
 
     # Alphabet Buttons Array
     alphabets = [
@@ -134,9 +139,24 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
     alphabetFrame.grid(row=3,column=0)
         
     # Create button through loop
+    letterButtons = {}
     for indexRow,row in enumerate(alphabets):
         for indexColumn,letter in enumerate(row):
-            letterButton = tk.Button(alphabetFrame, text=letter, command=lambda l=letter.lower():  guessWord(secretWord, l, stop_countdown))
-            letterButton.grid(row=indexRow+1, column=indexColumn,pady=5) 
-        
+            letterButton = tk.Button(
+                alphabetFrame, 
+                text=letter, 
+                command=lambda l=letter.lower():  guessWord(secretWord, l, stop_countdown),
+                highlightthickness=0,
+                borderwidth=0,
+                font=('Courier', 14, "bold underline"),
+            )
+            letterButton.grid(
+                row=indexRow+1, 
+                column=indexColumn,
+                padx=10,
+                pady=10,
+            ) 
+            letter = letter.lower()
+            letterButtons[letter]= letterButton
+
     return gameFrame
