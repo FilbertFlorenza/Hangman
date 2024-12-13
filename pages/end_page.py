@@ -14,13 +14,21 @@ def end_page(window, show_page, exit, images, message):
     buttonFrame = tk.Frame(endFrame)
     buttonFrame.grid(row=1,column=0)
     # Buttons
-    startButton = tk.Button(buttonFrame,
+    startButton = tk.Button(
+        buttonFrame,
         image=images['restartPhoto'], 
-        command=lambda: show_page('start_page'))
+        command=lambda: show_page('start_page'),
+        highlightthickness=0,
+        borderwidth=0
+    )
     startButton.grid(row=1,column=0)
-    exitButton = tk.Button(buttonFrame, 
+    exitButton = tk.Button(
+        buttonFrame, 
         image=images['exitPhoto'], 
-        command=lambda: exit())
+        command=lambda: exit(),
+        highlightthickness=0,
+        borderwidth=0
+    )
     exitButton.grid(row=1,column=1)
 
     return endFrame
