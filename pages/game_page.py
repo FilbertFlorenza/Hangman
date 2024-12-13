@@ -63,7 +63,7 @@ def game_page(window, show_page, difficulty, exit, wordlist, images):
 
     # Set Variables
     difficultySetting = difficulty
-    secretWord = 'test'
+    secretWord = chooseWord(wordlist)
     guessedWordVar = StringVar()
     lettersGuessedVar = StringVar()
     maxGuessVar = IntVar()
